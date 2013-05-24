@@ -20,7 +20,22 @@
 
 @implementation RangeSlider
 
-@synthesize min, max, minimumRangeLength;
+@synthesize min, max, minimumRangeLength, middle, middleShow;
+
+-(id)initWithCoder:(NSCoder *)aDecoder{
+    return [self initWithFrame:CGRectMake(0, 0, 200, 200)];
+}
+
+-(void)layoutSubviews{
+    [super layoutSubviews];
+    
+    CGRect frame = self.frame;
+    [trackImageView setFrame:CGRectMake(5, 8, frame.size.width-10, 14)];
+
+    [self updateThumbViews];
+    [self updateTrackImageViews];
+	
+}
 
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, SLIDER_HEIGHT)])) {
@@ -30,7 +45,7 @@
 			// default values
 		min = 0.0;
 		max = 1.0;
-		minimumRangeLength = 0.0;
+        minimumRangeLength = 0.0;
 				
 		backgroundImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, SLIDER_HEIGHT)];
 		backgroundImageView.contentMode = UIViewContentModeScaleToFill;
@@ -57,17 +72,33 @@
 	
 	minSlider = [[UIImageView alloc] initWithFrame:CGRectMake(min*self.frame.size.width, (SLIDER_HEIGHT-self.frame.size.height)/2.0, self.frame.size.height, self.frame.size.height)];
 	minSlider.backgroundColor = [UIColor whiteColor];
-	minSlider.contentMode = UIViewContentModeScaleToFill;
+	minSlider.contentMode = UIViewContentModeCenter;
 	
 	maxSlider = [[UIImageView alloc] initWithFrame:CGRectMake(max*(self.frame.size.width-self.frame.size.height), (SLIDER_HEIGHT-self.frame.size.height)/2.0, self.frame.size.height, self.frame.size.height)];
 	maxSlider.backgroundColor = [UIColor whiteColor];
-	maxSlider.contentMode = UIViewContentModeScaleToFill;
+	maxSlider.contentMode = UIViewContentModeCenter;
 	
-	[self addSubview:minSlider];
+    CGRect rect = minSlider.bounds;
+    rect.size.width = 2;
+    rect.origin.y = (rect.size.height - SLIDER_HEIGHT)/2.0f;
+    rect.size.height = SLIDER_HEIGHT;
+    middleSlider = [[UIImageView alloc] initWithFrame:rect];
+	middleSlider.backgroundColor = [UIColor redColor];
+	middleSlider.contentMode = UIViewContentModeCenter;
+	middleSlider.hidden = YES;
+    
+    [self addSubview:middleSlider];
+    [self addSubview:minSlider];
 	[self addSubview:maxSlider];
-	
 }
 
+-(void)setMiddleShow:(BOOL)show{
+    [middleSlider setHidden:!show];
+}
+
+-(BOOL)isMiddleShow{
+    return !middleSlider.hidden;
+}
 - (void)setMinThumbImage:(UIImage *)image {
 	minSlider.backgroundColor = [UIColor clearColor];
 	minSlider.image = image;	
@@ -81,7 +112,6 @@
 - (void)setInRangeTrackImage:(UIImage *)image {
 	trackImageView.frame = CGRectMake(inRangeTrackImageView.frame.origin.x,trackImageView.frame.origin.y, inRangeTrackImageView.frame.size.width, trackImageView.frame.size.height);
 	inRangeTrackImageView.image = [image stretchableImageWithLeftCapWidth:image.size.width/2.0-2 topCapHeight:image.size.height-2];
-	
 }
 
 - (void)setTrackImage:(UIImage *)image {
@@ -175,12 +205,26 @@
 
 - (void)setMin:(CGFloat)newMin {
 	min = MIN(1.0,MAX(0,newMin)); //value must be between 0 and 1
+    if (min > middle) {
+        middle = min;
+    }
 	[self updateThumbViews];
 	[self updateTrackImageViews];
 }
 
+- (void)setMiddle:(CGFloat)newMiddle {
+    if (newMiddle >= min && newMiddle <= max) {
+        middle = newMiddle;
+        [self updateThumbViews];
+        [self updateTrackImageViews];
+    }
+}
+
 - (void)setMax:(CGFloat)newMax {
 	max = MIN(1.0,MAX(0,newMax)); //value must be between 0 and 1
+	if (max < middle) {
+        middle = max;
+    }
 	[self updateThumbViews];
 	[self updateTrackImageViews];
 }
@@ -193,7 +237,14 @@
 
 		min = newMin;
 		max = newMax;
-		[self sendActionsForControlEvents:UIControlEventValueChanged];
+        [self sendActionsForControlEvents:UIControlEventValueChanged];
+        
+        if (trackingSlider == minSlider && [self.delegate respondsToSelector:@selector(rangeSliderChangedMinValue:)]) {
+            [self.delegate rangeSliderChangedMinValue:self];
+        }
+        else if (trackingSlider == maxSlider && [self.delegate respondsToSelector:@selector(rangeSliderChangedMaxValue:)]) {
+            [self.delegate rangeSliderChangedMaxValue:self];
+        }
 
 	}
 
@@ -220,6 +271,10 @@
 								 self.frame.size.height, 
 								 self.frame.size.height);
 	
+    middleSlider.frame = CGRectMake(middle*(self.frame.size.width - 2*self.frame.size.height)+ self.frame.size.height,
+								 (self.frame.size.height - 20)/2.0 - 2,
+								 2,
+								 20);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
