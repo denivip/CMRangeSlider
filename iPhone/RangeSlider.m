@@ -79,7 +79,7 @@
 	maxSlider.contentMode = UIViewContentModeCenter;
 	
     CGRect rect = minSlider.bounds;
-    rect.size.width = 2;
+    rect.size.width = self.frame.size.height;
     rect.origin.y = (rect.size.height - SLIDER_HEIGHT)/2.0f;
     rect.size.height = SLIDER_HEIGHT;
     middleSlider = [[UIImageView alloc] initWithFrame:rect];
@@ -107,6 +107,11 @@
 - (void)setMaxThumbImage:(UIImage *)image {
 	maxSlider.backgroundColor = [UIColor clearColor];
 	maxSlider.image = image;	
+}
+
+- (void)setMiddleThumbImage:(UIImage *)image{
+	middleSlider.backgroundColor = [UIColor clearColor];
+	middleSlider.image = image;
 }
 
 - (void)setInRangeTrackImage:(UIImage *)image {
@@ -271,10 +276,10 @@
 								 self.frame.size.height, 
 								 self.frame.size.height);
 	
-    middleSlider.frame = CGRectMake(middle*(self.frame.size.width - 2*self.frame.size.height)+ self.frame.size.height,
-								 (self.frame.size.height - 20)/2.0 - 2,
-								 2,
-								 20);
+    middleSlider.frame = CGRectMake(middle*(self.frame.size.width - 2*self.frame.size.height)+ self.frame.size.height/2.f,
+                                    (SLIDER_HEIGHT-self.frame.size.height)/2.0,
+                                    self.frame.size.height,
+                                    self.frame.size.height);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {

@@ -34,6 +34,7 @@
 @property (nonatomic, getter = isMiddleShow) BOOL middleShow;
 - (void)setMinThumbImage:(UIImage *)image;
 - (void)setMaxThumbImage:(UIImage *)image;
+- (void)setMiddleThumbImage:(UIImage *)image;
 - (void)setTrackImage:(UIImage *)image;
 - (void)setInRangeTrackImage:(UIImage *)image;
 
