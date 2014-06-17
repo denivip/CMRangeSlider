@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define SLIDER_HEIGHT 30
+static const CGFloat kDVGTrackHeight = 2.f;
 
 @interface RangeSlider ()
 
@@ -30,7 +31,7 @@
     [super layoutSubviews];
     
     CGRect frame = self.frame;
-    [trackImageView setFrame:CGRectMake(5, 8, frame.size.width-10, 14)];
+    [trackImageView setFrame:CGRectMake(5, (SLIDER_HEIGHT - kDVGTrackHeight)/2.f, frame.size.width-10, kDVGTrackHeight)];
 
     [self updateThumbViews];
     [self updateTrackImageViews];
@@ -51,10 +52,10 @@
 		backgroundImageView.contentMode = UIViewContentModeScaleToFill;
 		[self addSubview:backgroundImageView];
 		
-		trackImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, 0, frame.size.width-10, SLIDER_HEIGHT)];
+		trackImageView = [[UIImageView alloc] initWithFrame:CGRectMake(5, (SLIDER_HEIGHT - kDVGTrackHeight)/2.f, frame.size.width-10, kDVGTrackHeight)];
 		trackImageView.contentMode = UIViewContentModeScaleToFill;
 		
-		inRangeTrackImageView = [[UIImageView alloc] initWithFrame:CGRectMake(min*frame.size.width, 0, (max-min)*frame.size.width, SLIDER_HEIGHT)];
+		inRangeTrackImageView = [[UIImageView alloc] initWithFrame:CGRectMake(min*frame.size.width, (SLIDER_HEIGHT - kDVGTrackHeight)/2.f, (max-min)*frame.size.width, kDVGTrackHeight)];
 		inRangeTrackImageView.contentMode = UIViewContentModeScaleToFill;
 
 		[self addSubview:trackImageView];
