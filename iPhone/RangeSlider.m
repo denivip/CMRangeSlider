@@ -21,7 +21,7 @@ static const CGFloat kDVGTrackHeight = 2.f;
 
 @implementation RangeSlider
 
-@synthesize min, max, minimumRangeLength, middle, middleShow;
+@synthesize min, max, minimumRangeLength, middle;
 
 -(id)initWithCoder:(NSCoder *)aDecoder{
     return [self initWithFrame:CGRectMake(0, 0, 200, 200)];
