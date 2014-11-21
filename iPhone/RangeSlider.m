@@ -73,11 +73,11 @@ static const CGFloat kDVGTrackHeight = 2.f;
 	
 	minSlider = [[UIImageView alloc] initWithFrame:CGRectMake(min*self.frame.size.width, (SLIDER_HEIGHT-self.frame.size.height)/2.0, self.frame.size.height, self.frame.size.height)];
 	minSlider.backgroundColor = [UIColor whiteColor];
-	minSlider.contentMode = UIViewContentModeCenter;
+	minSlider.contentMode = UIViewContentModeLeft;
 	
 	maxSlider = [[UIImageView alloc] initWithFrame:CGRectMake(max*(self.frame.size.width-self.frame.size.height), (SLIDER_HEIGHT-self.frame.size.height)/2.0, self.frame.size.height, self.frame.size.height)];
 	maxSlider.backgroundColor = [UIColor whiteColor];
-	maxSlider.contentMode = UIViewContentModeCenter;
+	maxSlider.contentMode = UIViewContentModeRight;
 	
     CGRect rect = minSlider.bounds;
     rect.size.width = self.frame.size.height;
